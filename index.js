@@ -1,7 +1,12 @@
-import { BeeHandler } from "./BeeHandler.js";
+import express from "express";
+import apiRouter from "./src/routes/api.route.js";
 
-const beeHandler = new BeeHandler();
-beeHandler
-    .beeStats("738578")
-    .then((data) => console.log(data))
-    .catch((error) => console.error("Erro:", error));
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use("/", express.static("src/public"));
+app.use("/api/stats", apiRouter);
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});

@@ -1,5 +1,7 @@
 import puppeteer from "puppeteer";
 
+import { CustomError } from "../errors/CustomError.js";
+
 export class BeeHandler {
     constructor() {
         this.url_base = "https://judge.beecrowd.com/pt/";
@@ -22,8 +24,8 @@ export class BeeHandler {
         const url_profile = `${this.url_base}profile/${profileId}`;
         const { page, browser } = await this.__puppeteerWeb(url_profile);
 
-        const data = await page.evaluate(() => {
-            try {
+        try {
+            const data = await page?.evaluate(() => {
                 const profileDiv = document.querySelector(".profile-header");
                 const statsDiv = document.querySelector(".profile-code-infos");
 
@@ -54,25 +56,19 @@ export class BeeHandler {
                         ?.innerHTML ?? "0";
 
                 return {
-                    data: {
-                        points,
-                        rank,
-                        avatar,
-                        joinDate,
-                        submissions,
-                        solved,
-                        hardestSolved,
-                        offensiveDays,
-                    },
+                    points,
+                    rank,
+                    avatar,
+                    joinDate,
+                    submissions,
+                    solved,
+                    hardestSolved,
+                    offensiveDays,
                 };
-            } catch (error) {
-                return {
-                    errors: {
-                        details: "User Not Found",
-                    },
-                };
-            }
-        });
+            });
+        } catch (error) {
+            throw new CustomError("User Not Found", "User not found on the page");
+        }
 
         await browser.close();
         return data;
