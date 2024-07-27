@@ -5,19 +5,27 @@ import { CustomError } from "../errors/CustomError.js";
 export class BeeHandler {
     constructor() {
         this.url_base = "https://judge.beecrowd.com/pt/";
+        this.url_uoj = "https://resources.beecrowd.com/repository/UOJ_"
     }
 
     async __puppeteerWeb(url) {
-        const browser = await puppeteer.launch({
-            headless: true,
-        });
-        const page = await browser.newPage();
-        await page.setUserAgent(
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-        );
-
-        await page.goto(url);
-        return { page, browser };
+        try {
+            const browser = await puppeteer.launch({
+                headless: true,
+            });
+            const page = await browser.newPage();
+            await page.setUserAgent(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+            );
+    
+            page.goto(url);
+            return { page, browser };
+        } catch (error) {
+            throw new CustomError(
+                "Beecrowd Offline",
+                "Unable to render Beecrowd"
+            );
+        }
     }
 
     async beeStats(profileId) {
@@ -25,6 +33,9 @@ export class BeeHandler {
         const { page, browser } = await this.__puppeteerWeb(url_profile);
         var data = {};
         try {
+            await page.waitForSelector('.profile-header');
+            await page.waitForSelector('.profile-code-infos');
+
             data = await page.evaluate(() => {
                 const profileDiv = document.querySelector(".profile-header");
                 const statsDiv = document.querySelector(".profile-code-infos");
@@ -37,7 +48,7 @@ export class BeeHandler {
                 const avatar = profileDiv
                     .querySelector(".perfil-photo")
                     .getAttribute("style")
-                    .match(/url\(["']?([^"')]+)["']?\)/)[1];
+                    .match(/url\(["']?([^"')]+)["']?\)/)[1].split('?')[0];
                 const joinDate = profileDiv.querySelector(
                     ".profile-infos-join-date"
                 ).innerHTML;
@@ -63,10 +74,12 @@ export class BeeHandler {
                     submissions,
                     solved,
                     hardestSolved,
-                    urlHardestSolved: `https://resources.beecrowd.com/repository/UOJ_${hardestSolved}.html`,
                     offensiveDays,
                 };
             });
+
+            data.urlProfile = url_profile;
+            data.urlHardestSolved = `${this.url_uoj}${data.hardestSolved}.html`;
         } catch (error) {
             throw new CustomError(
                 "User Not Found",

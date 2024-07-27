@@ -9,7 +9,7 @@ const router = express.Router();
 const beeHandler = new BeeHandler();
 
 const loadTemplate = async () => {
-    const filePath = path.resolve("src/public/template.svg");
+    const filePath = path.resolve("src/public/templateProfile.svg");
     return fs.readFile(filePath, "utf-8");
 };
 
