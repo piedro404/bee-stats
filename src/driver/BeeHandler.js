@@ -63,6 +63,7 @@ export class BeeHandler {
                     submissions,
                     solved,
                     hardestSolved,
+                    urlHardestSolved: `https://resources.beecrowd.com/repository/UOJ_${hardestSolved}.html`,
                     offensiveDays,
                 };
             });
