@@ -23,9 +23,9 @@ export class BeeHandler {
     async beeStats(profileId) {
         const url_profile = `${this.url_base}profile/${profileId}`;
         const { page, browser } = await this.__puppeteerWeb(url_profile);
-
+        var data = {};
         try {
-            const data = await page?.evaluate(() => {
+            data = await page.evaluate(() => {
                 const profileDiv = document.querySelector(".profile-header");
                 const statsDiv = document.querySelector(".profile-code-infos");
 
@@ -67,7 +67,10 @@ export class BeeHandler {
                 };
             });
         } catch (error) {
-            throw new CustomError("User Not Found", "User not found on the page");
+            throw new CustomError(
+                "User Not Found",
+                "User not found on the page"
+            );
         }
 
         await browser.close();
