@@ -1,6 +1,8 @@
 import express from "express";
 import fs from "fs/promises";
 import path from "path";
+import axios from "axios";
+import base64Img from "base64-img";
 import { BeeHandler } from "../driver/BeeHandler.js";
 
 import { CustomError } from "../errors/CustomError.js"; 
@@ -22,10 +24,19 @@ const generateSvg = (template, data) => {
     return svg;
 };
 
+const imageToBase64 = async (url) => {
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
+    return `data:image/png;base64,${Buffer.from(response.data, 'binary').toString('base64')}`;
+};
+
 router.get("/:profileId", async (req, res) => {
     try {
         const { profileId } = req.params;
         const data = await beeHandler.beeStats(profileId);
+
+        if (data.avatar) {
+            data.avatar = await imageToBase64(data.avatar);
+        }
 
         const template = await loadTemplate();
         const svg = generateSvg(template, data);

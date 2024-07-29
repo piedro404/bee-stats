@@ -1,17 +1,19 @@
 {
   "name": "bee-stats",
   "version": "1.0.0",
+  "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "Piedro404 and Matheuz233",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
+    "@sparticuz/chromium": "^126.0.0",
+    "axios": "^1.7.2",
+    "base64-img": "^1.0.4",
+    "cors": "^2.8.5",
     "express": "^4.19.2",
-    "puppeteer": "^22.14.0"
+    "node-cache": "^5.1.2",
+    "puppeteer": "^10.4.0",
+    "puppeteer-core": "^22.14.0"
   }
 }
