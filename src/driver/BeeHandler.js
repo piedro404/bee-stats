@@ -7,7 +7,7 @@ export class BeeHandler {
     constructor() {
         this.url_base = "https://judge.beecrowd.com/pt/";
         this.url_uoj = "https://resources.beecrowd.com/repository/UOJ_";
-        this.cache = new NodeCache({ stdTTL: 1000 });
+        this.cache = new NodeCache({ stdTTL: 100000 });
         this.browser = null;
     }
 
@@ -40,7 +40,7 @@ export class BeeHandler {
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
         );
 
-        await page.goto(url, { waitUntil: 'networkidle2' });
+        await page.goto(url);
         return page;
     }
 
