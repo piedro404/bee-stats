@@ -7,7 +7,7 @@ export class BeeHandler {
     constructor() {
         this.url_base = "https://judge.beecrowd.com/pt/";
         this.url_uoj = "https://resources.beecrowd.com/repository/UOJ_";
-        this.cache = new NodeCache({ stdTTL: 100000 });
+        this.cache = new NodeCache({ stdTTL: 900 });
         this.browser = null;
     }
 
